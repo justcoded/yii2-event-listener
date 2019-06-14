@@ -26,36 +26,22 @@ or add
 
 to the require section of your composer.json.
 
-### TODO: WRITE DESCRIPTION!!! Configuration
-
-#### Database migration
-
-Before usage this extension, we'll also need to prepare the database.
-
-You can add migrations path to your console config and then run `migrate` command:
-
-```php
-'migrate' => [
-    'migrationPath' => [
-        '@vendor/justcoded/yii2-settings/migrations'
-    ],
-],
-```
-
-or you can run the command below:
-
-```
-php yii migrate --migrationPath=@vendor/justcoded/yii2-settings/migrations
-```
+### Configuration
 
 ### Component Setup
 
-To use the Setting Component, you need to configure the components array in your application configuration:
+To use the Event Listener Component, you need to configure the components array in your application configuration:
 
 ```php
 'components' => [
-    'settings' => [
-        'class'     => 'justcoded\yii2\settings\components\DbSettings',
+    'listener' => [
+        'class'     => \justcoded\yii2\eventlistener\components\EventListener::class,
+        'listeners' => [
+        	...
+        ],
+        'observers' => [
+        	...
+        ],
     ],
 ],
 ```
@@ -63,56 +49,126 @@ To use the Setting Component, you need to configure the components array in your
 and add component name to bootstrap array
 
 ```php
-    'bootstrap'  => ['log', 'settings'],
+    'bootstrap'  => ['log', 'listener'],
 ```
 
 ### Usage
 
-```php
-// set value
-Yii::$app->settings->set('section_name', 'key', 'value');
+#### Listeners
 
-// get value
-$value = Yii::$app->settings->get('section_name', 'key');
+**Listener** is a single action, which can be performed on some event. To register a listener you need to create a simple class:
+
+```php
+<?php
+namespace app\listeners;
+
+use justcoded\yii2\eventlistener\listeners\Listener;
+use yii\base\Event;
+
+/**
+ * Class Listener
+ *
+ * @package justcoded\yii2\eventlistener\listeners
+ */
+class UserListener extends Listener
+{
+	/**
+	 * Handle action on event trigger.
+	 *
+	 * @param Event $event
+	 *
+	 * @return void
+	 */
+	public function handle(Event $event)
+	{
+		/* @var \app\models\User $sender */
+		$sender = $event->sender;
+		
+		// TODO: write your code here.
+	}
+}
+
 ```
 
-There is a possibility to use models as some setting group object. To do this you have to
-add modelsMap array to component's configuration:
+After that you need to register it within a component inside 'listeners' config array:
 
 ```php
-    'settings' => [
-        'class'     => 'justcoded\yii2\settings\components\DbSettings',
-        'modelsMap' => [
-            'section1' => 'app\models\MySettingsForm1',
-            'section2' => 'app\models\MySettingsForm2',
+'components' => [
+    'listener' => [
+        'class'     => \justcoded\yii2\eventlistener\components\EventListener::class,
+        'listeners' => [
+        	\app\models\User::class => [
+				\app\models\User::EVENT_AFTER_UPDATE => \app\listeners\UserListener::class,
+			],
         ],
     ],
+],
 ```
 
-Add action to controller to get settings form with keys according to the model's properties
+#### Observers
+
+Observer is a class, which can subscribe to several events of the same model. To create an 
+Observer you need to extend it from a basic Observer class and create `events()` method and methods to 
+handle these events. 
+
+Example:
 
 ```php
-    public function actions()
-    {
-        return [
-            'actionName' => [
-                'class' => 'justcoded\yii2\settings\actions\SettingsAction',
-                'modelClass' => 'app\models\MySettingsForm1',
-            ],
-        ];
-    }
+<?php
+namespace app\listeners;
+
+use app\models\User;
+use justcoded\yii2\eventlistener\observers\ActiveRecordObserver;
+use justcoded\yii2\eventlistener\observers\Observer;
+use yii\base\Event;
+use yii\base\ModelEvent;
+use yii\db\AfterSaveEvent;
+
+/**
+ * Class Listener
+ *
+ * @package justcoded\yii2\eventlistener\listeners
+ */
+class UserObserver extends Observer
+{
+	public function events()
+	{
+		return [
+			User::EVENT_AFTER_UPDATE => 'updated',
+		];
+	}
+
+	/**
+	 * Handle action on event trigger.
+	 *
+	 * @param Event $event
+	 *
+	 * @return void
+	 */
+	public function updated(AfterSaveEvent $event)
+	{
+		/* @var \app\models\User $sender */
+		$sender = $event->sender;
+		
+		// TODO: write your code here.
+	}
+}
+
 ```
-and create view with some active form. (You can copy a template from extension "views" folder) 
 
-Now you can get settings in better way:
+##### ActiveRevordObserver
 
-```php
-$value = Yii::$app->settings->section1->myPropertyName;
-```
+Package also contains a specific class called ActiveRecordObserver. 
+This class already declared all ActiveRecord events an methods to process them:
 
-This is very useful, if you overwrite Yii/Application classes and specify correct PHPDoc comments. 
-In this way IDE will highlight all sections and properties.
+* inserting()
+* inserted()
+* updating()
+* updated()
+* deleting()
+* deleted()
+* validating()
+* validated()
+* refreshed()
+* initialized()
 
-### Example
-
-You can check the example on our [Yii2 starter kit](https://github.com/justcoded/yii2-starter).

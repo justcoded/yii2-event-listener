@@ -1,7 +1,7 @@
 CHANGELOG
 =====================
 
-v0.1
+v1.0
 ---------------------
-* Component, Listener, Observer abstracts
-* examples
+* Component, Listener, Observer
+* ActiveRecordObserver ready-to-use class

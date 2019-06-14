@@ -43,7 +43,7 @@ class EventListener extends Component implements EventListenerInterface, Bootstr
 	 *
 	 * @var array
 	 */
-	public $observers;
+	public $observers = [];
 
 	/**
 	 * Bootstrap method to be called during application bootstrap stage.
@@ -69,7 +69,9 @@ class EventListener extends Component implements EventListenerInterface, Bootstr
 	 * Normalize Config Array
 	 * check value to be array, index values with the same value string
 	 *
-	 * @param $array
+	 * @param array $array
+	 *
+	 * @return array
 	 */
 	protected function normalizeConfig($array)
 	{
@@ -80,6 +82,8 @@ class EventListener extends Component implements EventListenerInterface, Bootstr
 
 			$array[$key] = array_combine($value, $value);
 		}
+
+		return $array;
 	}
 
 	/**
@@ -87,6 +91,10 @@ class EventListener extends Component implements EventListenerInterface, Bootstr
 	 */
 	protected function initListeners()
 	{
+		if (empty($this->listeners)) {
+			return;
+		}
+
 		// normalize config array.
 		foreach ($this->listeners as $watchedName => $listeners) {
 			$this->listeners[$watchedName] = $this->normalizeConfig($listeners);
@@ -110,6 +118,10 @@ class EventListener extends Component implements EventListenerInterface, Bootstr
 	 */
 	protected function initObservers()
 	{
+		if (empty($this->observers)) {
+			return;
+		}
+
 		$this->observers = $this->normalizeConfig($this->observers);
 
 		foreach ($this->observers as $className => $observers) {

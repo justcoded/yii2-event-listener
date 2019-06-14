@@ -1,12 +1,12 @@
 {
-  "name": "justcoded/yii2-settings",
-  "description": "Yii2 Settings Component",
+  "name": "justcoded/yii2-event-listener",
+  "description": "Yii2 Event Listener",
   "type": "yii2-extension",
   "keywords": [
     "yii2",
-    "settings",
-    "config",
-    "storage"
+    "event listener",
+    "events",
+    "listeners"
   ],
   "license": "BSD-3-Clause",
   "authors": [
@@ -22,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "justcoded\\yii2\\settings\\": "src/"
+      "justcoded\\yii2\\eventlistener\\": "src/"
     }
   }
 }
