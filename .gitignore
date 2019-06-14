@@ -1,0 +1,25 @@
+# IDE project files
+.idea
+nbproject
+.buildpath
+.project
+.settings
+
+# windows thumbnail cache, Mac DS_Store
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# composer vendor dir
+/vendor
+
+# composer itself is not needed
+composer.phar
+composer.lock
+
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
+tests/_output/*
+tests/_support/_generated
