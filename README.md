@@ -141,7 +141,7 @@ class SiteControllerObserver extends Observer
 	 */
 	public function before(Event $event)
 	{
-		/* @var \app\models\User $sender */
+		/* @var SiteController $sender */
 		$sender = $event->sender;
 		
 		// TODO: write your code here.
@@ -156,7 +156,7 @@ class SiteControllerObserver extends Observer
 	 */
 	public function after(Event $event)
 	{
-		/* @var \app\models\User $sender */
+		/* @var SiteController $sender */
 		$sender = $event->sender;
 		
 		// TODO: write your code here.
