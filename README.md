@@ -66,9 +66,7 @@ use justcoded\yii2\eventlistener\listeners\Listener;
 use yii\base\Event;
 
 /**
- * Class Listener
- *
- * @package justcoded\yii2\eventlistener\listeners
+ * Class UserListener
  */
 class UserListener extends Listener
 {
@@ -115,7 +113,7 @@ Example:
 
 ```php
 <?php
-namespace app\listeners;
+namespace app\observers;
 
 use app\models\User;
 use justcoded\yii2\eventlistener\observers\ActiveRecordObserver;
@@ -125,9 +123,7 @@ use yii\base\ModelEvent;
 use yii\db\AfterSaveEvent;
 
 /**
- * Class Listener
- *
- * @package justcoded\yii2\eventlistener\listeners
+ * Class UserObserver
  */
 class UserObserver extends Observer
 {
