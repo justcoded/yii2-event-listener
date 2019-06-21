@@ -66,9 +66,9 @@ use justcoded\yii2\eventlistener\listeners\Listener;
 use yii\base\Event;
 
 /**
- * Class UserListener
+ * Class SendUserGreeting
  */
-class UserListener extends Listener
+class SendUserGreeting extends Listener
 {
 	/**
 	 * Handle action on event trigger.
@@ -82,7 +82,7 @@ class UserListener extends Listener
 		/* @var \app\models\User $sender */
 		$sender = $event->sender;
 		
-		// TODO: write your code here.
+		// TODO: write your code here, for example, send user greeting email after it was registered or created.
 	}
 }
 
@@ -96,7 +96,7 @@ After that you need to register it within a component inside 'listeners' config 
         'class'     => \justcoded\yii2\eventlistener\components\EventListener::class,
         'listeners' => [
         	\app\models\User::class => [
-				\app\models\User::EVENT_AFTER_UPDATE => \app\listeners\UserListener::class,
+				\app\models\User::EVENT_AFTER_INSERT => \app\listeners\SendUserGreeting::class,
 			],
         ],
     ],
@@ -115,41 +115,67 @@ Example:
 <?php
 namespace app\observers;
 
-use app\models\User;
-use justcoded\yii2\eventlistener\observers\ActiveRecordObserver;
+use app\controllers\SiteController;
 use justcoded\yii2\eventlistener\observers\Observer;
 use yii\base\Event;
-use yii\base\ModelEvent;
-use yii\db\AfterSaveEvent;
 
 /**
  * Class UserObserver
  */
-class UserObserver extends Observer
+class SiteControllerObserver extends Observer
 {
 	public function events()
 	{
 		return [
-			User::EVENT_AFTER_UPDATE => 'updated',
+			SiteController::EVENT_BEFORE_ACTION => 'before',
+			SiteController::EVENT_AFTER_ACTION => 'after',
 		];
 	}
 
 	/**
-	 * Handle action on event trigger.
+	 * Handle before action event
 	 *
 	 * @param Event $event
 	 *
 	 * @return void
 	 */
-	public function updated(AfterSaveEvent $event)
+	public function before(Event $event)
 	{
 		/* @var \app\models\User $sender */
 		$sender = $event->sender;
 		
 		// TODO: write your code here.
 	}
-}
 
+	/**
+	 * Handle after action event
+	 *
+	 * @param Event $event
+	 *
+	 * @return void
+	 */
+	public function after(Event $event)
+	{
+		/* @var \app\models\User $sender */
+		$sender = $event->sender;
+		
+		// TODO: write your code here.
+	}	
+}
+```
+
+After that you need to register it within a component inside 'observers' config array:
+
+```php
+'components' => [
+    'listener' => [
+        'class'     => \justcoded\yii2\eventlistener\components\EventListener::class,
+        'observers' => [
+        	app\controllers\SiteController::class => \app\observers\SiteControllerObserver::class,
+        	app\models\User::class => \app\observers\UserObserver::class,
+        ],
+    ],
+],
 ```
 
 ##### ActiveRevordObserver
@@ -168,3 +194,34 @@ This class already declared all ActiveRecord events an methods to process them:
 * refreshed()
 * initialized()
 
+Example:
+
+```php
+<?php
+namespace app\observers;
+
+use justcoded\yii2\eventlistener\observers\ActiveRecordObserver;
+use yii\db\AfterSaveEvent;
+
+/**
+ * Class UserObserver
+ */
+class UserObserver extends ActiveRecordObserver
+{
+	/**
+	 * Handle AFTER_UPDATE ActiveRecord event.
+	 *
+	 * @param AfterSaveEvent $event
+	 *
+	 * @return void
+	 */
+	public function updated(AfterSaveEvent $event)
+	{
+		/* @var \app\models\User $sender */
+		$sender = $event->sender;
+		
+		// TODO: write your code here.
+	}
+}
+
+```
