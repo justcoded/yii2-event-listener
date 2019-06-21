@@ -6,16 +6,16 @@
     <br>
 </p>
 
-Simple event listeners registration component and view abstract classes to implement Linstener or Observer.
+Simple event listeners registration component and base abstract classes to implement Linstener or Observer.
 
-### Installation
+## Installation
 
 The preferred way to install this extension is through composer.
 
 Either run
 
 ```bash
-php composer.phar require --prefer-dist justcoded/yii2-event-listener "*"
+composer require --prefer-dist justcoded/yii2-event-listener "*"
 ```
 
 or add
@@ -25,8 +25,6 @@ or add
 ```
 
 to the require section of your composer.json.
-
-### Configuration
 
 ### Component Setup
 
@@ -52,9 +50,9 @@ and add component name to bootstrap array
     'bootstrap'  => ['log', 'listener'],
 ```
 
-### Usage
+## Usage
 
-#### Listeners
+### Listeners
 
 **Listener** is a single action, which can be performed on some event. To register a listener you need to create a simple class:
 
@@ -103,7 +101,7 @@ After that you need to register it within a component inside 'listeners' config 
 ],
 ```
 
-#### Observers
+### Observers
 
 Observer is a class, which can subscribe to several events of the same model. To create an 
 Observer you need to extend it from a basic Observer class and create `events()` method and methods to 
@@ -178,7 +176,7 @@ After that you need to register it within a component inside 'observers' config 
 ],
 ```
 
-##### ActiveRevordObserver
+#### ActiveRevordObserver
 
 Package also contains a specific class called ActiveRecordObserver. 
 This class already declared all ActiveRecord events an methods to process them:
