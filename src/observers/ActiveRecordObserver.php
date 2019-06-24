@@ -54,7 +54,7 @@ class ActiveRecordObserver extends Observer
 	{
 	}
 
-	public function deleted(\yii\base\ModelEvent $event)
+	public function deleted(\yii\base\Event $event)
 	{
 	}
 
